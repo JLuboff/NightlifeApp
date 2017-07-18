@@ -1,0 +1,21 @@
+{
+  "name": "nightlifeapp",
+  "version": "1.0.0",
+  "description": "An app to search for nearby bars and inform others you'll be there",
+  "main": "app.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JLuboff/NightlifeApp.git"
+  },
+  "author": "Jason Luboff",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JLuboff/NightlifeApp/issues"
+  },
+  "homepage": "https://github.com/JLuboff/NightlifeApp#readme"
+}
