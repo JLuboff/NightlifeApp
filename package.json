@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "An app to search for nearby bars and inform others you'll be there",
   "main": "app.js",
-  "dependencies": {},
+  "dependencies": {
+    "express-session": "^1.15.4",
+    "yelp-fusion": "^1.0.3"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
