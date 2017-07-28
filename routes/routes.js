@@ -1,6 +1,6 @@
 const yelp = require('yelp-fusion');
 
-module.exports = (app, passport) => {
+module.exports = (app, passport, db) => {
 
 
   app.route('/')
@@ -32,32 +32,67 @@ module.exports = (app, passport) => {
   app.route('/:location')
     .get((req, res) => {
       req.session.location = req.params.location;
+      let city = req.session.location.toLowerCase();
+      db.collection('location').find({city}).toArray((err, doc) => {
+        if (err) throw err;
+        console.log(`Found...: ${doc}`);
+        if(doc.length){
+        console.log(`Check`);
+        return res.json(doc);
+      } else {
+        yelp.accessToken('dNlo7ZOX2VzRimvxUmEiXA', 'jhrkuiwW1U4kfgSarByzubXNTOecaWDTorHJv3GPKle4rYA60pmamqd55uXGQhT7')
+                              .then(response => {
+                                //console.log(response.jsonBody.access_token);
+  const client = yelp.client(response.jsonBody.access_token);
 
-      console.log('Stored location: ' + req.session.location);
-      yelp.accessToken('dNlo7ZOX2VzRimvxUmEiXA', 'jhrkuiwW1U4kfgSarByzubXNTOecaWDTorHJv3GPKle4rYA60pmamqd55uXGQhT7')
-                            .then(response => {
-                              //console.log(response.jsonBody.access_token);
-const client = yelp.client(response.jsonBody.access_token);
+                                client.search({
+                                  term: 'Bar',
+                                  location: city
+                                }).then(response => {
+                                  let businesses = [];
 
-                              client.search({
-                                term: 'Bar',
-                                location: req.params.location
-                              }).then(response => {
-                                let businesses = [];
+                                  response.jsonBody.businesses.forEach(biz => {
+                                    let business = {};
+                                    business['city'] = city;
+                                    business['name'] = biz.name;
+                                    business['image'] = biz.image_url;
+                                    business['rating'] = biz.rating;
+                                    business['count'] = 0;
+                                    businesses.push(business);
+                                  })
+                                  db.collection('location').insertMany(businesses, (err, doc) => {
+                                    if(err) throw err;
 
-                                response.jsonBody.businesses.forEach(biz => {
-                                  let business = {};
-                                  business['name'] = biz.name;
-                                  business['image'] = biz.image_url;
-                                  business['rating'] = biz.rating;
-                                  businesses.push(business);
-                                })
+                                  console.log(`Had to insert..: ${JSON.stringify(doc)}`);
 
-                                console.log(businesses);
+                              res.json(doc.ops);
+                                    });
+                                }).catch(e => {console.log(e)});
+                              }).catch(e=> {console.log(e)});
+      }
+      })
 
-                                  res.json(businesses);
-                              }).catch(e => {console.log(e)});
-                            }).catch(e=> {console.log(e)});
     })
 
+  app.route('/going/:city/:locationName')
+  /*  .get((req, res) => {
+      let city = req.params.city.toLowerCase();
+      console.log('Request recieved: ' + city + " " + req.params.locationName);
+      db.collection('location').updateOne({city, bar: req.params.locationName},
+            {$inc:{ count : 1}},
+            {upsert: true });
+
+    return;
+  }) */
+    .post((req, res) => {
+      let city = req.params.city.toLowerCase();
+      db.collection('location').updateOne({city: city, name: req.params.locationName},
+            {$inc:{ count : 1}},
+            {upsert: true });
+      db.collection('location').findOne({city: city, name: req.params.locationName}, (err, doc) => {
+        if(err) throw err;
+
+        res.json(doc);
+      })
+    })
 };

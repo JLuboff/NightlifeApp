@@ -45,9 +45,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-routes(app, passport);
+MongoClient.connect(`mongodb://localhost:27017/bars`, (err, db)=>{
+  if(err) throw err;
+
+routes(app, passport, db);
 
 app.listen(port, () => {
 
   console.log(`Listening on port: ${port}`);
+});
 });
