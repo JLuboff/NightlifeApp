@@ -43,15 +43,19 @@ const client = yelp.client(response.jsonBody.access_token);
                                 term: 'Bar',
                                 location: req.params.location
                               }).then(response => {
-                                let names = [];
+                                let businesses = [];
 
                                 response.jsonBody.businesses.forEach(biz => {
-                                  names.push(biz.name);
+                                  let business = {};
+                                  business['name'] = biz.name;
+                                  business['image'] = biz.image_url;
+                                  business['rating'] = biz.rating;
+                                  businesses.push(business);
                                 })
 
-                                //console.log(response.jsonBody);
-                                console.log(`Names of Businesses: ${names}`);
-                                  res.json(names);
+                                console.log(businesses);
+
+                                  res.json(businesses);
                               }).catch(e => {console.log(e)});
                             }).catch(e=> {console.log(e)});
     })

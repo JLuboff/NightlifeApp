@@ -13,7 +13,6 @@
           <a class="navbar-item" href="/">FCC-Nightlife</a>
         </div>
         <div class="navbar-end">
-          <a class="navbar-item" href="/addpoll">Add poll</a>
           {{#if user}}
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link is-active" href="#">
@@ -31,22 +30,32 @@
       </nav>
     </div>
 
-    <section class="hero is-primary is-fullheight">
+    <section class="hero is-light is-fullheight">
       <div class="hero-head">
         <div class="columns">
           <div class="column is-half is-offset-one-quarter content">
-            <h1 class="notification is-primary has-text-centered"> Input your City: </h1>
+            <h1 class="notification is-light has-text-centered"> Input your City: </h1>
           </div>
         </div>
         <div class="columns">
           <div class="column is-half is-offset-one-quarter content">
             <form action="GET">
-            <input type="text" id="city" value="{{location}}">
+              <div class="field has-addons">
+                <div class="control is-expanded">
+            <input type="text" class="input" id="city" value="{{location}}">
+          </div>
+          <div class="control">
             <a class="button" id="location">Submit</a>
+          </div>
+        </div>
           </form>
         </div>
       </div>
+      <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
       <span id="businesses"></span>
+    </div>
+  </div>
       </div>
     </section>
 
