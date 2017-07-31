@@ -52,8 +52,12 @@
         </div>
       </div>
       <div class="columns">
+        <div class="column is-half is-offset-one-quarter content has-text-centered">
+          <span id="checkLogin">Please login to be able to Check-in.</span>
+        </div>
+      </div>
+      <div class="columns">
         <div class="column is-half is-offset-one-quarter">
-          <span id="count">asf</span>
       <span id="businesses"></span>
     </div>
   </div>
@@ -68,6 +72,87 @@
       </div>
     </footer>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
-<script src='/js/index.js'></script>
+<!--<script src='/js/index.js'></script> -->
+<script>
+$(document).ready(function(){
+let  location = $('#city').val();
+{{#if user}}
+console.log(true);
+  $('#checkLogin').text('');
+  {{else}}
+  console.log(false);
+  $('#checkLogin').text('Please login to be able to Check-in.');
+{{/if}}
+if(location !== undefined){
+  $.getJSON(`/${location}`, data => {
+    data.forEach((biz) => {
+      let bizId = biz.name.replace(/['&\s]/g, '');
+        $('#businesses').append(`
+          <div class="card">
+            <div class="card-content">
+              <p class="title">${biz.name}  </p>
+              <p class="subtitle">Rating: ${biz.rating} </p>
+            </div>
+            <footer class="card-footer">
+              <p class="card-footer-item">
+                <span><a href="/going/${$('#city').val()}/${biz.name}" class="going" id="${bizId}">Going</a>: <span id="${bizId}Count"> ${biz.count} </span>
+              </p>
+              <p class="card-footer-item">
+                <span></span>
+              </p>
+            </footer>
+        </div>
+        `);
+  })
+})
+} ;
+  $('#location').click((e) => {
+    {{#if user}}
+    console.log(true);
+      $('#checkLogin').text('');
+      {{else}}
+      console.log(false);
+      $('#checkLogin').text('Please login to be able to Check-in.');
+    {{/if}}
+    $('#businesses').empty();
+    $.getJSON(`/${$('#city').val()}`, data => {
+      data.forEach((biz) => {
+      let bizId = biz.name.replace(/['&\s]/g, '');
+        $('#businesses').append(`
+          <div class="card">
+            <div class="card-content">
+              <p class="title">${biz.name}  </p>
+              <p class="subtitle">Rating: ${biz.rating} </p>
+            </div>
+            <footer class="card-footer">
+              <p class="card-footer-item">
+                <span><a href="/going/${$('#city').val()}/${biz.name}" class="going" id="${bizId}">Going</a>: <span id="${bizId}Count"> ${biz.count} </span>
+              </p>
+              <p class="card-footer-item">
+                <span></span>
+              </p>
+            </footer>
+        </div>
+          `);
+      })
+    })
+  })
+
+  $(document).on('click', '.going', (e) => {
+    e.preventDefault();
+    console.log(`clicked`);
+    $.ajax({
+      type: 'POST',
+      url: e.target.href,
+      success: data => {
+        console.log(data.count, e.target.id);
+     console.log($('#' + e.target.id + 'Count').html());
+      $('#' + e.target.id + 'Count').html(data.count);
+      }
+    })
+  })
+
+})
+</script>
   </body>
   </html>

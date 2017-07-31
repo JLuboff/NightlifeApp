@@ -1,7 +1,12 @@
 const yelp = require('yelp-fusion');
 
 module.exports = (app, passport, db) => {
-
+  const isLogged = (req, res, next) => {
+    if(req.isAuthenticated()){
+      return next();
+    }
+    return res.redirect('/login');
+  };
 
   app.route('/')
     .get((req, res) => {
@@ -84,7 +89,7 @@ module.exports = (app, passport, db) => {
 
     return;
   }) */
-    .post((req, res) => {
+    .post(isLogged, (req, res) => {
       let city = req.params.city.toLowerCase();
     /*  db.collection('location').updateOne({city: city, name: req.params.locationName},
             {$inc:{ count : 1}},

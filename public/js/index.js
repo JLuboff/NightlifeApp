@@ -3,7 +3,7 @@ let  location = $('#city').val();
 if(location !== undefined){
   $.getJSON(`/${location}`, data => {
     data.forEach((biz) => {
-      let bizId = biz.name.replace(/\s/g, '');
+      let bizId = biz.name.replace(/['&\s]/g, '');
         $('#businesses').append(`
           <div class="card">
             <div class="card-content">
@@ -27,7 +27,7 @@ if(location !== undefined){
     $('#businesses').empty();
     $.getJSON(`/${$('#city').val()}`, data => {
       data.forEach((biz) => {
-      let bizId = biz.name.replace(/\s/g, '');
+      let bizId = biz.name.replace(/['&\s]/g, '');
         $('#businesses').append(`
           <div class="card">
             <div class="card-content">
@@ -51,7 +51,6 @@ if(location !== undefined){
   $(document).on('click', '.going', (e) => {
     e.preventDefault();
     console.log(`clicked`);
-    console.log(e.target.href, e.target.id, this.id);
     $.ajax({
       type: 'POST',
       url: e.target.href,
@@ -61,8 +60,6 @@ if(location !== undefined){
       $('#' + e.target.id + 'Count').html(data.count);
       }
     })
-
-    console.log(`First: ${e.target.id} and Second: ${e.target.id + 'Count'}`);
   })
 
 })
