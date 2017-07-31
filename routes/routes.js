@@ -86,13 +86,21 @@ module.exports = (app, passport, db) => {
   }) */
     .post((req, res) => {
       let city = req.params.city.toLowerCase();
-      db.collection('location').updateOne({city: city, name: req.params.locationName},
+    /*  db.collection('location').updateOne({city: city, name: req.params.locationName},
             {$inc:{ count : 1}},
             {upsert: true });
       db.collection('location').findOne({city: city, name: req.params.locationName}, (err, doc) => {
         if(err) throw err;
 
         res.json(doc);
-      })
+      }) */
+        console.log("City: " + city + " Name: " + req.params.locationName)
+      db.collection('location').findOneAndUpdate({city: city, name: req.params.locationName},
+              {$inc:{ count : 1}},
+              {upsert: true, returnOriginal: false }, (err, doc) => {
+                if(err) throw err;
+                  console.log(doc);
+                res.json(doc.value);
+              })
     })
 };
