@@ -39,7 +39,7 @@
         </div>
         <div class="columns">
           <div class="column is-half is-offset-one-quarter content">
-            <form action="GET">
+          <!--  <form action="GET"> -->
               <div class="field has-addons">
                 <div class="control is-expanded">
             <input type="text" class="input" id="city" value="{{location}}">
@@ -48,7 +48,7 @@
             <a class="button" id="location">Submit</a>
           </div>
         </div>
-          </form>
+        <!--  </form> -->
         </div>
       </div>
       <div class="columns">
@@ -77,10 +77,8 @@
 $(document).ready(function(){
 let  location = $('#city').val();
 {{#if user}}
-console.log(true);
   $('#checkLogin').text('');
   {{else}}
-  console.log(false);
   $('#checkLogin').text('Please login to be able to Check-in.');
 {{/if}}
 if(location !== undefined){
@@ -98,7 +96,7 @@ if(location !== undefined){
                 <span><a href="/going/${$('#city').val()}/${biz.name}" class="going" id="${bizId}">Going</a>: <span id="${bizId}Count"> ${biz.count} </span>
               </p>
               <p class="card-footer-item">
-                <span></span>
+                <span id="usersGoing"></span>
               </p>
             </footer>
         </div>
@@ -108,16 +106,17 @@ if(location !== undefined){
 } ;
   $('#location').click((e) => {
     {{#if user}}
-    console.log(true);
       $('#checkLogin').text('');
       {{else}}
-      console.log(false);
       $('#checkLogin').text('Please login to be able to Check-in.');
     {{/if}}
     $('#businesses').empty();
     $.getJSON(`/${$('#city').val()}`, data => {
+    //  console.log(data[2].user);
       data.forEach((biz) => {
       let bizId = biz.name.replace(/['&\s]/g, '');
+      let users = {};
+
         $('#businesses').append(`
           <div class="card">
             <div class="card-content">
@@ -129,11 +128,18 @@ if(location !== undefined){
                 <span><a href="/going/${$('#city').val()}/${biz.name}" class="going" id="${bizId}">Going</a>: <span id="${bizId}Count"> ${biz.count} </span>
               </p>
               <p class="card-footer-item">
-                <span></span>
+
+                <span id="${bizId}Users"></span>
+
               </p>
             </footer>
         </div>
           `);
+        /*  biz.user.forEach((user) => {
+            $(`#${bizId}Users`).append(`
+              <a title="${user[0]}"><img src='${user[1]}'></a>
+          `)
+        }); */
       })
     })
   })
