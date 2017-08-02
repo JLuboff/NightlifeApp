@@ -91,7 +91,6 @@ module.exports = (app, passport, db) => {
           {$inc:{ count : -1}, $pull: {user: { $in: [user] } }},
           {upsert: true, returnOriginal: false, sort: { count: -1} }, (err, doc) => {
             if(err) throw err;
-            console.log(doc);
             return res.json(doc.value);
           })
         } else {
@@ -99,7 +98,6 @@ module.exports = (app, passport, db) => {
             {$inc:{ count : 1}, $addToSet: {user: [user, avatar]}},
             {upsert: true, returnOriginal: false,  sort: { count: -1} }, (err, doc) => {
               if(err) throw err;
-              console.log(doc);
               return res.json(doc.value);
             })
           };
