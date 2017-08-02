@@ -37,7 +37,7 @@ module.exports = (app, passport, db) => {
   .get((req, res) => {
     req.session.location = req.params.location;
     let city = req.session.location.toLowerCase();
-    db.collection('location').find({city}).toArray((err, doc) => {
+    db.collection('location').find({city}).sort({count: -1}).toArray((err, doc) => {
       if (err) throw err;
 
       if(doc.length){
@@ -89,7 +89,7 @@ module.exports = (app, passport, db) => {
       if(doc){
         db.collection('location').findOneAndUpdate({city: city, name: req.params.locationName},
           {$inc:{ count : -1}, $pull: {user: { $in: [user] } }},
-          {upsert: true, returnOriginal: false }, (err, doc) => {
+          {upsert: true, returnOriginal: false, sort: { count: -1} }, (err, doc) => {
             if(err) throw err;
             console.log(doc);
             return res.json(doc.value);
@@ -97,7 +97,7 @@ module.exports = (app, passport, db) => {
         } else {
           db.collection('location').findOneAndUpdate({city: city, name: req.params.locationName},
             {$inc:{ count : 1}, $addToSet: {user: [user, avatar]}},
-            {upsert: true, returnOriginal: false }, (err, doc) => {
+            {upsert: true, returnOriginal: false,  sort: { count: -1} }, (err, doc) => {
               if(err) throw err;
               console.log(doc);
               return res.json(doc.value);
