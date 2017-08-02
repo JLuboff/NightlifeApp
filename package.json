@@ -4,6 +4,7 @@
   "description": "An app to search for nearby bars and inform others you'll be there",
   "main": "app.js",
   "dependencies": {
+    "express": "^4.15.3",
     "express-session": "^1.15.4",
     "hbs": "^4.0.1",
     "mongodb": "^2.2.30",
