@@ -84,7 +84,7 @@ module.exports = (app, passport, db) => {
     let user = `${req.user._json.first_name} ${req.user._json.last_name}`;
     let avatar = req.user._json.picture.data.url;
 
-    db.collection('location').findOne({city: city, name: req.params.locationName, user: {$elemMatch: {$elemMatch: {$in: ['Jason Luboff']}}}}, (err, doc) => {
+    db.collection('location').findOne({city: city, name: req.params.locationName, user: {$elemMatch: {$elemMatch: {$in: [user]}}}}, (err, doc) => {
       if(err) throw err;
       if(doc){
         db.collection('location').findOneAndUpdate({city: city, name: req.params.locationName},
